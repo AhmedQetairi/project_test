@@ -29,7 +29,7 @@
     <!-- ====== Rooms ====== -->
     <!-- Form view of hotel room -->
     <record id="view_hotel_room_form" model="ir.ui.view">
-        <field name="name">hotel.room.form</field>
+        <field name="name">Billboard</field>
         <field name="model">hotel.room</field>
         <field name="arch" type="xml">
             <form string="Hotel Room">
@@ -61,7 +61,7 @@
                                 <field
                                     name="product_manager"
                                     select="2"
-                                    string="Billboard Manager"
+                                    string="Room Manager"
                                 />
                                 <field name="capacity" />
                                 <field name="uom_id" invisible="1" />
@@ -290,7 +290,4 @@
             </kanban>
         </field>
     </record>
-    
-    
-    
 </odoo>
