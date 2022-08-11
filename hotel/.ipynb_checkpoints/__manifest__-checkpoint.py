@@ -31,6 +31,6 @@
     ],
     "css": ["static/src/css/room_kanban.css"],
     "external_dependencies": {"python": ["dateutil"]},
-    "images": ["static/description/Hotel.png"],
+    "images": ["static/description/sky.png"],
     "application": True,
 }
