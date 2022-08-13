@@ -143,9 +143,8 @@
             <tree string="Hotel Room">
                 <field name="name" />
                 <field name="room_categ_id" />
-                <field name="list_price" string="Room rate" />
                 <field name="status" />
-                <field name="capacity" />
+                
             </tree>
         </field>
     </record>

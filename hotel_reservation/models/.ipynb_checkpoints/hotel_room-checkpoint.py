@@ -21,7 +21,7 @@ class HotelRoom(models.Model):
     _description = "Hotel Room"
 
     room_reservation_line_ids = fields.One2many(
-        "hotel.room.reservation.line", "room_id", string="Room Reserve Line"
+        "hotel.room.reservation.line", "room_id", string="Billboard Reserve Line"
     )
 
     def unlink(self):
@@ -132,7 +132,7 @@ class RoomReservationSummary(models.Model):
         user_obj = self.env["res.users"]
         date_range_list = []
         main_header = []
-        summary_header_list = ["Rooms"]
+        summary_header_list = ["Billboards"]
         
         if self.date_from and self.date_to:
             if self.date_from > self.date_to:
@@ -321,8 +321,9 @@ class RoomReservationSummary(models.Model):
 #                     if self.option == "reserved":
 #                         room_detail.update({"value": room_list_reserved})
 #                     elif self.option == "free":
-                room_detail.update({"value": room_list_stats})
-                all_room_detail.append(room_detail)
+                if room.name == self.target_room.name:
+                    room_detail.update({"value": room_list_stats})
+                    all_room_detail.append(room_detail)
 
 
    
