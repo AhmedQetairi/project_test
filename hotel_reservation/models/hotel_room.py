@@ -100,6 +100,7 @@ class RoomReservationSummary(models.Model):
     )
     option = fields.Selection([('reserved','Reserved'),('free','Free')])
     target_room = fields.Many2one('hotel.room', string='Hotel Rooms')
+    goal_rooms = fields.Many2many('hotel.room')
     summary_header = fields.Text("Summary Header")
     room_summary = fields.Text("Room Summary")
 

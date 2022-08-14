@@ -333,8 +333,17 @@
                         
                         <div>
                             <label for="target_room" string="Choose Billboard"/>
-                            <field name="target_room"/>
+                            <field 
+                                   name="target_room"
+                                   widget="many2many_tags"
+                            />
                         </div>
+                        
+                         <div>
+                            <label for="goal_rooms" string="Choose Billboards"/>
+                            <field name="goal_rooms"/>
+                        </div>
+                        
                     </group>
                     <notebook>
                         <page name="room_summary" string="Billboard Summary">

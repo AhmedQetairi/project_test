@@ -40,7 +40,7 @@ class HotelReservation(models.Model):
     )
     partner_id = fields.Many2one(
         "res.partner",
-        "Guest Name",
+        "Customer Name",
         readonly=True,
         index=True,
         required=True,
@@ -168,8 +168,8 @@ class HotelReservation(models.Model):
                 if (reservation.adults + reservation.children) > cap:
                     raise ValidationError(
                         _(
-                            "Room Capacity Exceeded \n"
-                            " Please Select Rooms According to"
+                            "Billboard Capacity Exceeded \n"
+                            " Please Select Billboards According to"
                             " Members Accomodation."
                         )
                     )
@@ -248,8 +248,8 @@ class HotelReservation(models.Model):
         reservation_line_obj = self.env["hotel.room.reservation.line"]
         vals = {}
         for reservation in self:
-            reserv_checkin = reservation.checkin
-            reserv_checkout = reservation.checkout
+            reserv_checkin = reservation.checkin + timedelta(days=3)
+            reserv_checkout = reservation.checkout 
             room_bool = False
             for line_id in reservation.reservation_line:
                 for room in line_id.reserve:
@@ -543,11 +543,11 @@ class HotelReservationLine(models.Model):
             ):
                 if self.line_id.checkin and line.check_in and self.line_id.checkout:
                     if (
-                        self.line_id.checkin <= line.check_in <= self.line_id.checkout
+                        self.line_id.checkin <= line.check_in <= self.line_id.checkout - relativedelta(days=2)
                     ) or (
-                        self.line_id.checkin <= line.check_out <= self.line_id.checkout
+                        self.line_id.checkin <= line.check_out <= self.line_id.checkout - relativedelta(days=2)
                     ):
-                        assigned = True
+                        assigned = False
                     elif (line.check_in <= self.line_id.checkin <= line.check_out) or (
                         line.check_in <= self.line_id.checkout <= line.check_out
                     ):
