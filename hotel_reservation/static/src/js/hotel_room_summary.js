@@ -23,8 +23,6 @@ odoo.define("hotel_reservation.hotel_room_summary", function (require) {
                 date_from: false,
                 summary_header: false,
                 room_summary: false,
-                option:false,
-                target_room:false,
             });
             this.set({
                 summary_header: py.eval(this.recordData.summary_header),

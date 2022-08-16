@@ -331,17 +331,12 @@
                             <field name="date_to" class="oe_inline" />
                         </div>
                         
-                        <div>
-                            <label for="target_room" string="Choose Billboard"/>
-                            <field 
-                                   name="target_room"
-                                   widget="many2many_tags"
-                            />
-                        </div>
-                        
                          <div>
                             <label for="goal_rooms" string="Choose Billboards"/>
-                            <field name="goal_rooms"/>
+                            <field 
+                                   name="goal_rooms"
+                                   widget="many2many_tags"
+                            />
                         </div>
                         
                     </group>
