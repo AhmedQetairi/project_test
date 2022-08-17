@@ -152,6 +152,7 @@ class HotelReservation(models.Model):
     
     goal_rooms_test = fields.Many2many("hotel.room")
     
+    
     @api.onchange("checkin")
     def on_change_checkin(self):
         self.date_from_test = self.checkin
@@ -161,9 +162,22 @@ class HotelReservation(models.Model):
     def on_change_checkout(self):
         self.date_to_test = self.checkout
         
+    
+#     @api.onchange("goal_rooms_test")
+#     def _onchange_goal_rooms_test(self):
+        
+#         for rec in self:
+#             lines = [(5,0,0)]
+#             for line in self.goal_rooms_test.name:
+#                 for reservation
+#                 vals = {
+#                     "room_id":line.id
+#                 }
+#                 lines.append((0,0, vals))
+#             rec.reservation_line = lines
         
         
-    @api.onchange("date_from_test", "date_to_test", "goal_rooms_test")  # noqa C901 (function is too complex)
+    @api.onchange("date_from_test", "date_to_test", "reservation_line")  # noqa C901 (function is too complex)
     def get_room_summary(self):  # noqa C901 (function is too complex)
         """
         @param self: object pointer
@@ -208,44 +222,32 @@ class HotelReservation(models.Model):
             all_detail.append(summary_header_list)
             room_ids = room_obj.search([])
             all_room_detail = []
-            for rec in self.goal_rooms_test:
+            for rec in self.reservation_line:
                 for room in room_ids:
-                    if rec.name == room.name:
-                        room_detail = {}
-                        room_list_stats = []
-                        room_detail.update({"name": room.name or ""})
-                        if not room.room_reservation_line_ids and not room.room_line_ids:
-                            for chk_date in date_range_list:
-                                room_list_stats.append(
-                                    {
-                                        "state": "Free",
-                                        "date": chk_date,
-                                        "room_id": room.id,
-                                    }
-                                )
-                        else:
-                            for chk_date in date_range_list:
-                                ch_dt = chk_date[:10] + " 23:59:59"
-                                ttime = datetime.strptime(ch_dt, dt)
-                                c = ttime.replace(tzinfo=timezone).astimezone(
-                                    pytz.timezone("UTC")
-                                )
-                                chk_date = c.strftime(dt)
-                                reserline_ids = room.room_reservation_line_ids.ids
-                                reservline_ids = reservation_line_obj.search(
-                                    [
-                                        ("id", "in", reserline_ids),
-                                        ("check_in", "<=", chk_date),
-                                        ("check_out", ">=", chk_date),
-                                        ("state", "=", "assigned"),
-                                    ]
-                                )
-                                if not reservline_ids:
-                                    sdt = dt
-                                    chk_date = datetime.strptime(chk_date, sdt)
-                                    chk_date = datetime.strftime(
-                                        chk_date - timedelta(days=1), sdt
+                    for reservation in rec.reserve:
+                        if reservation.name == room.name:
+                        
+                            room_detail = {}
+                            room_list_stats = []
+                            room_detail.update({"name": room.name or ""})
+                            if not room.room_reservation_line_ids and not room.room_line_ids:
+                                for chk_date in date_range_list:
+                                    room_list_stats.append(
+                                        {
+                                            "state": "Free",
+                                            "date": chk_date,
+                                            "room_id": room.id,
+                                        }
                                     )
+                            else:
+                                for chk_date in date_range_list:
+                                    ch_dt = chk_date[:10] + " 23:59:59"
+                                    ttime = datetime.strptime(ch_dt, dt)
+                                    c = ttime.replace(tzinfo=timezone).astimezone(
+                                        pytz.timezone("UTC")
+                                    )
+                                    chk_date = c.strftime(dt)
+                                    reserline_ids = room.room_reservation_line_ids.ids
                                     reservline_ids = reservation_line_obj.search(
                                         [
                                             ("id", "in", reserline_ids),
@@ -254,84 +256,98 @@ class HotelReservation(models.Model):
                                             ("state", "=", "assigned"),
                                         ]
                                     )
-                                    for res_room in reservline_ids:
-                                        cid = res_room.check_in
-                                        cod = res_room.check_out
-                                        dur = cod - cid
-                                        if room_list_stats:
-                                            count = 0
-                                            for rlist in room_list_stats:
-                                                cidst = datetime.strftime(cid, dt)
-                                                codst = datetime.strftime(cod, dt)
-                                                rm_id = res_room.room_id.id
-                                                ci = rlist.get("date") >= cidst
-                                                co = rlist.get("date") <= codst
-                                                rm = rlist.get("room_id") == rm_id
-                                                st = rlist.get("state") == "Reserved"
-                                                if ci and co and rm and st:
-                                                    count += 1
-                                            if count - dur.days == 0:
-                                                c_id1 = user_obj.browse(self._uid)
-                                                c_id = c_id1.company_id
-                                                con_add = 0
-                                                amin = 0.0
-                                                # When configured_addition_hours is
-                                                # greater than zero then we calculate
-                                                # additional minutes
-                                                if c_id:
-                                                    con_add = c_id.additional_hours
-                                                if con_add > 0:
-                                                    amin = abs(con_add * 60)
-                                                hr_dur = abs(dur.seconds / 60)
-                                                if amin > 0:
-                                                    # When additional minutes is greater
-                                                    # than zero then check duration with
-                                                    # extra minutes and give the room
-                                                    # reservation status is reserved
-                                                    # --------------------------
-                                                    if hr_dur >= amin:
-                                                        reservline_ids = True
+                                    if not reservline_ids:
+                                        sdt = dt
+                                        chk_date = datetime.strptime(chk_date, sdt)
+                                        chk_date = datetime.strftime(
+                                            chk_date - timedelta(days=1), sdt
+                                        )
+                                        reservline_ids = reservation_line_obj.search(
+                                            [
+                                                ("id", "in", reserline_ids),
+                                                ("check_in", "<=", chk_date),
+                                                ("check_out", ">=", chk_date),
+                                                ("state", "=", "assigned"),
+                                            ]
+                                        )
+                                        for res_room in reservline_ids:
+                                            cid = res_room.check_in
+                                            cod = res_room.check_out
+                                            dur = cod - cid
+                                            if room_list_stats:
+                                                count = 0
+                                                for rlist in room_list_stats:
+                                                    cidst = datetime.strftime(cid, dt)
+                                                    codst = datetime.strftime(cod, dt)
+                                                    rm_id = res_room.room_id.id
+                                                    ci = rlist.get("date") >= cidst
+                                                    co = rlist.get("date") <= codst
+                                                    rm = rlist.get("room_id") == rm_id
+                                                    st = rlist.get("state") == "Reserved"
+                                                    if ci and co and rm and st:
+                                                        count += 1
+                                                if count - dur.days == 0:
+                                                    c_id1 = user_obj.browse(self._uid)
+                                                    c_id = c_id1.company_id
+                                                    con_add = 0
+                                                    amin = 0.0
+                                                    # When configured_addition_hours is
+                                                    # greater than zero then we calculate
+                                                    # additional minutes
+                                                    if c_id:
+                                                        con_add = c_id.additional_hours
+                                                    if con_add > 0:
+                                                        amin = abs(con_add * 60)
+                                                    hr_dur = abs(dur.seconds / 60)
+                                                    if amin > 0:
+                                                        # When additional minutes is greater
+                                                        # than zero then check duration with
+                                                        # extra minutes and give the room
+                                                        # reservation status is reserved
+                                                        # --------------------------
+                                                        if hr_dur >= amin:
+                                                            reservline_ids = True
+                                                        else:
+                                                            reservline_ids = False
                                                     else:
-                                                        reservline_ids = False
+                                                        if hr_dur > 0:
+                                                            reservline_ids = True
+                                                        else:
+                                                            reservline_ids = False
                                                 else:
-                                                    if hr_dur > 0:
-                                                        reservline_ids = True
-                                                    else:
-                                                        reservline_ids = False
-                                            else:
-                                                reservline_ids = False
-                                fol_room_line_ids = room.room_line_ids.ids
-                                chk_state = ["draft", "cancel"]
-                                folio_resrv_ids = folio_room_line_obj.search(
-                                    [
-                                        ("id", "in", fol_room_line_ids),
-                                        ("check_in", "<=", chk_date),
-                                        ("check_out", ">=", chk_date),
-                                        ("status", "not in", chk_state),
-                                    ]
-                                )
-                                if reservline_ids or folio_resrv_ids:
-                                    room_list_stats.append(
-                                        {
-                                            "state": "Reserved",
-                                            "date": chk_date,
-                                            "room_id": room.id,
-                                            "is_draft": "No",
-                                            "data_model": "",
-                                            "data_id": 0,
-                                        }
+                                                    reservline_ids = False
+                                    fol_room_line_ids = room.room_line_ids.ids
+                                    chk_state = ["draft", "cancel"]
+                                    folio_resrv_ids = folio_room_line_obj.search(
+                                        [
+                                            ("id", "in", fol_room_line_ids),
+                                            ("check_in", "<=", chk_date),
+                                            ("check_out", ">=", chk_date),
+                                            ("status", "not in", chk_state),
+                                        ]
                                     )
-                                else:
-                                    room_list_stats.append(
-                                        {
-                                            "state": "Free",
-                                            "date": chk_date,
-                                            "room_id": room.id,
-                                        }
-                                    )
+                                    if reservline_ids or folio_resrv_ids:
+                                        room_list_stats.append(
+                                            {
+                                                "state": "Reserved",
+                                                "date": chk_date,
+                                                "room_id": room.id,
+                                                "is_draft": "No",
+                                                "data_model": "",
+                                                "data_id": 0,
+                                            }
+                                        )
+                                    else:
+                                        room_list_stats.append(
+                                            {
+                                                "state": "Free",
+                                                "date": chk_date,
+                                                "room_id": room.id,
+                                            }
+                                        )
 
-                        room_detail.update({"value": room_list_stats})
-                        all_room_detail.append(room_detail)
+                            room_detail.update({"value": room_list_stats})
+                            all_room_detail.append(room_detail)
             main_header.append({"header": summary_header_list})
             self.summary_header = str(main_header)
             self.room_summary = str(all_room_detail)
@@ -713,7 +729,7 @@ class HotelReservationLine(models.Model):
 
     _name = "hotel.reservation.line"
     _description = "Reservation Line"
-
+    
     name = fields.Char("Name")
     line_id = fields.Many2one("hotel.reservation")
     reserve = fields.Many2many(
