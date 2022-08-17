@@ -102,26 +102,13 @@
                             
                             <newline />
                             
-                            <field name="goal_rooms_test"/>
-                            
                             
                             <field name="adults" required="1" />
                             <field name="children" />
                         </group>
                     </group>
-                    <notebook>
-                        
-                        <page name="room_summary" string="Billboard folio">
-                            <field name="summary_header" colspan="4" invisible="1" />
-                            <field
-                                name="room_summary"
-                                colspan="4"
-                                invisible="0"
-                                widget="Room_Reservation"
-                            />
-                            <!--                             <widget name="Room_Reservation"></widget> -->
-                        </page>
-                        
+                    
+                    <notebook>   
                         <page name="reservation_line" string='Reservation Line'>
                             <field name="reservation_line" colspan="4" nolabel="1">
                                 <form string="Reservation Line">
@@ -146,11 +133,34 @@
                                 </tree>
                             </field>
                         </page>
-                        <page name="history" string='History'>
-                            <field name='folio_id' readonly='1' />
+                    </notebook>
+                    
+                    
+                    <notebook>
+                        
+                        <page name="room_summary" string="Billboard folio">
+                            <field name="summary_header" colspan="4" invisible="1" />
+                            <field
+                                name="room_summary"
+                                colspan="4"
+                                invisible="0"
+                                widget="Room_Reservation"
+                            />
+                            <!--                             <widget name="Room_Reservation"></widget> -->
                         </page>
-                
-                    </notebook>  
+                        
+                    </notebook>
+                    <newline />
+                    <newline />
+                    <newline />
+                     
+                    
+                    <notebook>
+                            <page name="history" string='History'>
+                                <field name='folio_id' readonly='1' />
+                            </page>
+                    </notebook>
+                      
                 </sheet>
             </form>
         </field>
