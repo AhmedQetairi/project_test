@@ -13,19 +13,20 @@
         sequence="6"
         parent="hotel_management_menu"
     />
-    <menuitem
+<!--     <menuitem
         id="menu_open_hotel_floor_form_tree"
         name="Floor"
         action="open_hotel_floor_form_tree"
         sequence="21"
         parent="hotel_configuration_menu"
-    />
+    /> -->
     <menuitem
         id="menu_hotel_room"
-        name="Billboard"
+        name="Billboards"
         parent="hotel.hotel_configuration_menu"
         sequence="2"
     />
+    
     <menuitem
         id="menu_open_hotel_room_type_form_tree"
         name="Billboard Types"
@@ -33,26 +34,35 @@
         sequence="6"
         parent="hotel.menu_hotel_room"
     />
+    
     <menuitem
+        id="menu_open_hotel_location_form_tree"
+        name="Billboard Locations"
+        action="action_hotel_location_form"
+        sequence="7"
+        parent="hotel.menu_hotel_room"
+    />
+    
+<!--     <menuitem
         id="menu_amenity"
         name="Amenity"
         parent="hotel.hotel_configuration_menu"
         sequence="2"
-    />
-    <menuitem
+    /> -->
+<!--     <menuitem
         name="Amenity Types"
         id="menu_action_hotel_room_amenities_type_view_form"
         action="action_hotel_room_amenities_type_view_form"
         sequence="3"
         parent="hotel.menu_amenity"
-    />
-    <menuitem
+    /> -->
+<!--     <menuitem
         id="menu_action_hotel_room_amenities_view_form"
         name="Amenities"
         action="action_hotel_room_amenities_view_form"
         sequence="2"
         parent="hotel.menu_amenity"
-    />
+    /> -->
     <menuitem
         id="menu_open_hotel_room_form"
         name="Billboards"
