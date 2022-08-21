@@ -18,7 +18,7 @@
         id="action_hotel_room_amenities_type_view_form"
         model="ir.actions.act_window"
     >
-        <field name="name">Amenitiesfgdfg Type</field>
+        <field name="name">Amenities Type</field>
         <field name="res_model">hotel.room.amenities.type</field>
         <field name="context">{}</field>
         <field name="view_mode">tree,form</field>
@@ -43,6 +43,15 @@
         <field name="view_id" ref="view_hotel_room_tree" />
         <field name="view_mode">kanban,tree,form</field>
     </record>
+    
+    <!-- Action for hotel location -->
+    <record id="action_hotel_location_form" model="ir.actions.act_window">
+        <field name="name">Billboard Locations</field>
+        <field name="res_model">hotel.location</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    
+    
     <!-- Action for hotel folio -->
     <record id="open_hotel_folio1_form_tree_all" model="ir.actions.act_window">
         <field name="name">Generate Folio</field>

@@ -35,7 +35,6 @@
         <field name="amenity_id" search="[('name', '=', 'Beds')]" />
         <field name="name">Double Bed</field>
     </record>
-    
     <!-- hotel_room_type -->
     <record id="rooms" model="hotel.room.type">
         <field name="name">All Rooms</field>
@@ -52,7 +51,6 @@
         <field name="categ_id" search="[('name', '=', 'All Rooms')]" />
         <field name="name">Triple</field>
     </record>
-    
     <!-- hotel_service_type -->
 <!--     <record id="hotel_service_type_0" model="hotel.service.type">
         <field name="name">All Services</field>

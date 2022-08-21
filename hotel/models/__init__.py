@@ -6,3 +6,4 @@ from . import hotel_room
 from . import hotel_services
 from . import product_product
 from . import res_company
+from . import hotel_location
