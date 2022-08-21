@@ -375,32 +375,32 @@ class HotelReservation(models.Model):
         ctx.update({"duplicate": True})
         return super(HotelReservation, self.with_context(ctx)).copy()
 
-    @api.constrains("reservation_line", "adults", "children")
-    def _check_reservation_rooms(self):
-        """
-        This method is used to validate the reservation_line.
-        -----------------------------------------------------
-        @param self: object pointer
-        @return: raise a warning depending on the validation
-        """
-        ctx = dict(self._context) or {}
-        for reservation in self:
-            cap = 0
-            for rec in reservation.reservation_line:
-                if len(rec.reserve) == 0:
-                    raise ValidationError(_("Please Select Billboards For Reservation."))
-                cap = sum(room.capacity for room in rec.reserve)
-            if not ctx.get("duplicate"):
-                if (reservation.adults + reservation.children) > cap:
-                    raise ValidationError(
-                        _(
-                            "Billboard Capacity Exceeded \n"
-                            " Please Select Billboards According to"
-                            " Members Accomodation."
-                        )
-                    )
-            if reservation.adults <= 0:
-                raise ValidationError(_("Adults must be more than 0"))
+#     @api.constrains("reservation_line", "adults", "children")
+#     def _check_reservation_rooms(self):
+#         """
+#         This method is used to validate the reservation_line.
+#         -----------------------------------------------------
+#         @param self: object pointer
+#         @return: raise a warning depending on the validation
+#         """
+#         ctx = dict(self._context) or {}
+#         for reservation in self:
+#             cap = 0
+#             for rec in reservation.reservation_line:
+#                 if len(rec.reserve) == 0:
+#                     raise ValidationError(_("Please Select Billboards For Reservation."))
+#                 cap = sum(room.capacity for room in rec.reserve)
+#             if not ctx.get("duplicate"):
+#                 if (reservation.adults + reservation.children) > cap:
+#                     raise ValidationError(
+#                         _(
+#                             "Billboard Capacity Exceeded \n"
+#                             " Please Select Billboards According to"
+#                             " Members Accomodation."
+#                         )
+#                     )
+#             if reservation.adults <= 0:
+#                 raise ValidationError(_("Adults must be more than 0"))
 
     @api.constrains("checkin", "checkout")
     def check_in_out_dates(self):
@@ -474,7 +474,7 @@ class HotelReservation(models.Model):
         reservation_line_obj = self.env["hotel.room.reservation.line"]
         vals = {}
         for reservation in self:
-            reserv_checkin = reservation.checkin + timedelta(days=3)
+            reserv_checkin = reservation.checkin
             reserv_checkout = reservation.checkout 
             room_bool = False
             for line_id in reservation.reservation_line:
@@ -497,6 +497,13 @@ class HotelReservation(models.Model):
                                 and reserv_checkout >= check_out
                             ):
                                 room_bool = True
+                                
+                            if (
+                                check_out >= reserv_checkin + timedelta(days=3)  
+                                or reserv_checkout <= check_in + timedelta(days=3)
+                            ):
+                                room_bool = False
+                            
                             r_checkin = (reservation.checkin).date()
                             r_checkout = (reservation.checkout).date()
                             check_intm = (reserv.check_in).date()
@@ -769,15 +776,30 @@ class HotelReservationLine(models.Model):
             ):
                 if self.line_id.checkin and line.check_in and self.line_id.checkout:
                     if (
-                        self.line_id.checkin <= line.check_in <= self.line_id.checkout - relativedelta(days=2)
+                        self.line_id.checkin <= line.check_in <= self.line_id.checkout 
+#                         - relativedelta(days=3)
                     ) or (
-                        self.line_id.checkin <= line.check_out <= self.line_id.checkout - relativedelta(days=2)
+                        self.line_id.checkin <= line.check_out <= self.line_id.checkout 
                     ):
-                        assigned = False
+                        assigned = True
+                    elif (
+                        self.line_id.checkin <= line.check_in <= self.line_id.checkout 
+                    ) or (
+                        self.line_id.checkin <= line.check_out <= self.line_id.checkout
+                    ):
+                        assigned = True
                     elif (line.check_in <= self.line_id.checkin <= line.check_out) or (
                         line.check_in <= self.line_id.checkout <= line.check_out
                     ):
                         assigned = True
+                        
+                    if (
+                        line.check_in <= self.line_id.checkout <= line.check_in + relativedelta(days=3) 
+                    ) or (
+                        line.check_out - relativedelta(days=3) <= self.line_id.checkin <= line.check_out
+                    ):
+                        assigned = False
+                        
             for rm_line in room.room_line_ids.filtered(lambda l: l.status != "cancel"):
                 if self.line_id.checkin and rm_line.check_in and self.line_id.checkout:
                     if (
@@ -796,6 +818,14 @@ class HotelReservationLine(models.Model):
                         rm_line.check_in <= self.line_id.checkout <= rm_line.check_out
                     ):
                         assigned = True
+                        
+                    if (
+                        rm_line.check_in <= self.line_id.checkout <= rm_line.check_in + relativedelta(days=3) 
+                    ) or (
+                        rm_line.check_out - relativedelta(days=3) <= self.line_id.checkin <= rm_line.check_out
+                    ):
+                        assigned = False 
+                        
             if not assigned:
                 room_ids.append(room.id)
         domain = {"reserve": [("id", "in", room_ids)]}
