@@ -35,10 +35,9 @@
             <form string="Hotel Room">
                 <sheet>
                     <field
-                        name="image_1920"
+                        name="image"
                         widget="image"
                         class="oe_avatar"
-                        options="{'preview_image': 'image_128'}"
                     />
                     <div class="oe_title">
                         <label for="name" string="Name" />
@@ -56,9 +55,9 @@
                     <notebook>
                         <page name="information_hotel_room" string="Information">
                             <group colspan="4" col="4">
-                                <field name="floor_id" string="Floor" />
+<!--                                 <field name="floor_id" string="Floor" /> -->
                                 <field name="room_categ_id" select="1" />
-                                <field
+<!--                                 <field
                                     name="product_manager"
                                     select="2"
                                     string="Billboard Manager"
@@ -74,7 +73,7 @@
                                     name="taxes_id"
                                     widget="many2many_tags"
                                     string="Customer Taxes"
-                                />
+                                /> -->
                             </group>
                         </page>
                         

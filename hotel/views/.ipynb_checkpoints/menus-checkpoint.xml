@@ -28,6 +28,14 @@
     />
     
     <menuitem
+        id="menu_hotel_district"
+        name="District"
+        action="action_hotel_district_form"
+        parent="hotel.hotel_configuration_menu"
+        sequence="8"
+    />
+    
+    <menuitem
         id="menu_open_hotel_room_type_form_tree"
         name="Billboard Types"
         action="open_hotel_room_type_form_tree"
@@ -72,18 +80,18 @@
     />
     <menuitem
         id="menu_all_folio"
-        name="Folio"
+        name="Quotation"
         parent="hotel.hotel_management_menu"
         sequence="4"
     />
     <menuitem
-        name="Generate Folio"
+        name="Create Quotation"
         id="menu_open_hotel_folio1_form_tree_all"
         action="open_hotel_folio1_form_tree_all"
         sequence="5"
         parent="menu_all_folio"
     />
-    <menuitem
+<!--     <menuitem
         id="menu_hotel_service"
         name="Services"
         parent="hotel.hotel_configuration_menu"
@@ -102,5 +110,5 @@
         action="action_hotel_services_form"
         sequence="8"
         parent="hotel.menu_hotel_service"
-    />
+    /> -->
 </odoo>
