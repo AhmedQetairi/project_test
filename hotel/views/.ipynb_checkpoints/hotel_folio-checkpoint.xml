@@ -57,13 +57,13 @@
                     />
                 </header>
                 <sheet>
-                    <label for="name" string="Folio Number" />
+                    <label for="name" string="Quotation Number" />
                     <h1>
                         <field name="name" colspan="4" />
                     </h1>
                     <group colspan="4" col="4">
                         <field name="date_order" readonly="1" />
-                        <field name="warehouse_id" string="Branch" />
+                        <field name="warehouse_id" string="Branch"/>
                         <field name="invoice_status" />
                         <field
                             name="hotel_invoice_id"
@@ -97,6 +97,9 @@
                                 <field name="duration" readonly="1" />
                                 <field name="duration_dummy" invisible="1" />
                             </group>
+                            
+                            <newline />
+                            <newline />
                             <separator string="Billboard Lines" colspan="4" />
                             <field
                                 name="room_line_ids"
@@ -162,72 +165,7 @@
                                     <field invisible="1" name="state" />
                                 </tree>
                             </field>
-                            <separator string="Service Lines" colspan="4" />
-                            <field
-                                name="service_line_ids"
-                                colspan="4"
-                                string="Service Line"
-                                nolabel="1"
-                                context="{'deafult_ser_checkin_date':checkin_date,
-                                'deafult_ser_checkout_date':checkout_date
-                                }"
-                            >
-
-                                <tree editable="bottom" string="Service Line">
-                                    <field
-                                        name="product_id"
-                                        required="1"
-                                        domain="[('isservice','=',True)]"
-                                        context="{'partner_id':parent.partner_id,'quantity':product_uom_qty,'pricelist':parent.pricelist_id,'hotel':parent.warehouse_id,'uom':product_uom}"
-                                        options="{'no_open': True}"
-                                    />
-                                    <field name="ser_checkout_date" invisible="1" />
-                                    <field name="ser_checkin_date" invisible="1" />
-                                    <field name="name" />
-                                    <field
-                                        name="company_id"
-                                        options="{'no_create': True}"
-                                        groups="base.group_multi_company"
-                                        invisible="1"
-                                    />
-                                    <field name="product_uom_qty" string="Duration" />
-                                    <field
-                                        name="product_uom_category_id"
-                                        invisible="1"
-                                    />
-                                    <field
-                                        name="product_uom"
-                                        string="Rent(UOM)"
-                                        attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"
-                                        context="{'company_id': parent.company_id}"
-                                        groups="uom.group_uom"
-                                        options="{'no_open': True}"
-                                    />
-                                    <field name="price_unit" />
-                                    <field
-                                        domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
-                                        name="tax_id"
-                                        options="{'no_create': True}"
-                                        widget="many2many_tags"
-                                    />
-                                    <field
-                                        groups="product.group_discount_per_so_line"
-                                        name="discount"
-                                    />
-                                    <field
-                                        groups="account.group_show_line_subtotals_tax_excluded"
-                                        name="price_subtotal"
-                                        widget="monetary"
-                                    />
-                                    <field
-                                        groups="account.group_show_line_subtotals_tax_included"
-                                        name="price_total"
-                                        widget="monetary"
-                                    />
-                                    <field invisible="1" name="currency_id" />
-                                    <field name="state" invisible="1" />
-                                </tree>
-                            </field>
+                           
                             <group colspan="2" class="oe_subtotal_footer oe_right">
                                 <field
                                     name="amount_untaxed"
