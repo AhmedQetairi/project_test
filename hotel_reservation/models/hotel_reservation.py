@@ -190,10 +190,10 @@ class HotelReservation(models.Model):
         user_obj = self.env["res.users"]
         date_range_list = []
         main_header = []
-        summary_header_list = ["Rooms"]
+        summary_header_list = ["Billboards"]
         if self.date_from_test and self.date_to_test:
             if self.date_from_test > self.date_to_test:
-                raise UserError(_("Checkout date should be greater than Checkin date."))
+                raise UserError(_("End Date should be greater than Start date."))
             if self._context.get("tz", False):
                 timezone = pytz.timezone(self._context.get("tz", False))
             else:
@@ -355,20 +355,20 @@ class HotelReservation(models.Model):
     
         
 
-    def unlink(self):
-        """
-        Overrides orm unlink method.
-        @param self: The object pointer
-        @return: True/False.
-        """
-        lines_of_moves_to_post = self.filtered(
-            lambda reserv_rec: reserv_rec.state != "draft"
-        )
-        if lines_of_moves_to_post:
-            raise ValidationError(
-                _("Sorry, you can only delete the reservation when it's draft!")
-            )
-        return super(HotelReservation, self).unlink()
+#     def unlink(self):
+#         """
+#         Overrides orm unlink method.
+#         @param self: The object pointer
+#         @return: True/False.
+#         """
+#         lines_of_moves_to_post = self.filtered(
+#             lambda reserv_rec: reserv_rec.state != "draft"
+#         )
+#         if lines_of_moves_to_post:
+#             raise ValidationError(
+#                 _("Sorry, you can only delete the reservation when it's draft!")
+#             )
+#         return super(HotelReservation, self).unlink()
 
     def copy(self):
         ctx = dict(self._context) or {}
@@ -517,7 +517,7 @@ class HotelReservation(models.Model):
                                 raise ValidationError(
                                     _(
                                         "You tried to Confirm "
-                                        "Reservation with room"
+                                        "Reservation with Billboard"
                                         " those already "
                                         "reserved in this "
                                         "Reservation Period. "
