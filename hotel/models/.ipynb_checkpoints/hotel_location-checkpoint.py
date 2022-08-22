@@ -11,6 +11,8 @@ class HotelLocation(models.Model):
     _name = "hotel.location"
     _description = "Hotel Location"
 
+    
+    city_parent = fields.Many2one("hotel.city", "City")
     service_id = fields.Many2one("hotel.location", "Service Category")
     child_ids = fields.One2many(
         "hotel.location", "service_id", "Service Child Categories"
@@ -184,4 +186,6 @@ class HotelDistrict(models.Model):
         else:
             categories = self.search(args, limit=limit)
         return categories.name_get()
-   
+    
+    
+    

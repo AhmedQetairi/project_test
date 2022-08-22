@@ -36,6 +36,22 @@
     />
     
     <menuitem
+        id="menu_hotel_city"
+        name="City"
+        action="action_hotel_city_form"
+        parent="hotel.hotel_configuration_menu"
+        sequence="8"
+    />
+    
+    <menuitem
+        id="menu_hotel_location"
+        name="Location"
+        action="action_hotel_location_form"
+        parent="hotel.hotel_configuration_menu"
+        sequence="8"
+    />
+    
+    <menuitem
         id="menu_open_hotel_room_type_form_tree"
         name="Billboard Types"
         action="open_hotel_room_type_form_tree"
@@ -43,13 +59,13 @@
         parent="hotel.menu_hotel_room"
     />
     
-    <menuitem
+<!--     <menuitem
         id="menu_open_hotel_location_form_tree"
         name="Billboard Locations"
         action="action_hotel_location_form"
         sequence="7"
         parent="hotel.menu_hotel_room"
-    />
+    /> -->
     
 <!--     <menuitem
         id="menu_amenity"

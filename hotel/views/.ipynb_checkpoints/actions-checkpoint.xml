@@ -80,4 +80,20 @@
         <field name="res_model">hotel.district</field>
         <field name="view_mode">tree,form</field>
     </record>
+    
+    <!-- Action for hotel district -->
+    <record id="action_hotel_city_form" model="ir.actions.act_window">
+        <field name="name">City</field>
+        <field name="res_model">hotel.city</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    
+    <!-- Action for hotel district -->
+    <record id="action_hotel_location_form" model="ir.actions.act_window">
+        <field name="name">Location</field>
+        <field name="res_model">hotel.location</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    
+    
 </odoo>

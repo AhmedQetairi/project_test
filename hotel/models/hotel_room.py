@@ -22,6 +22,10 @@ class HotelRoom(models.Model):
 
     image = fields.Binary()
     
+    location = fields.Many2one("hotel.location", "Location")
+    city = fields.Many2one("hotel.city", "City")
+    district = fields.Many2one("hotel.district", "District")
+    
     product_id = fields.Many2one(
         "product.product",
         "Product_id",
