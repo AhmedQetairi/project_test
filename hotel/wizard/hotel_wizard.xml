@@ -12,7 +12,7 @@
                 <footer>
                     <button
                         name="print_report"
-                        string="Print Folio"
+                        string="Print Quotations"
                         icon="fa-print"
                         type="object"
                         class="oe_highlight"
