@@ -8,13 +8,13 @@
         <field name="arch" type="xml">
             <form string="Reservation">
                 <header>
-                    <button
+<!--                     <button
                         name="action_send_reservation_mail"
                         type="object"
                         string="Send Reservation Email"
                         states="confirm"
                         class="oe_highlight"
-                    />
+                    /> -->
                     <button
                         name="confirmed_reservation"
                         string="Confirm"
@@ -24,7 +24,7 @@
                     />
                     <button
                         name="create_folio"
-                        string="Create Folio"
+                        string="Create Quotation"
                         states="confirm"
                         class="oe_highlight"
                         type="object"
@@ -72,7 +72,7 @@
                            
                         </group>
                         <separator />
-                        <group colspan="4" col="4">
+<!--                         <group colspan="4" col="4">
                             <field
                                 name="partner_id"
                                 context="{'default_customer_rank': 1}"
@@ -92,7 +92,7 @@
                                 domain="[('parent_id','=',partner_id)]"
                                 invisible="True"
                             />
-                        </group>
+                        </group> -->
                         <group colspan="4" col="4">
                             <field name="checkin" />
                             <field name="checkout" />
@@ -103,8 +103,8 @@
                             <newline />
                             
                             
-                            <field name="adults" required="1" />
-                            <field name="children" />
+<!--                             <field name="adults" required="1" />
+                            <field name="children" /> -->
                         </group>
                     </group>
                     
@@ -138,7 +138,7 @@
                     
                     <notebook>
                         
-                        <page name="room_summary" string="Billboard folio">
+                        <page name="room_summary" string="Billboard Schedule">
                             <field name="summary_header" colspan="4" invisible="1" />
                             <field
                                 name="room_summary"
@@ -155,11 +155,11 @@
                     <newline />
                      
                     
-                    <notebook>
+<!--                     <notebook>
                             <page name="history" string='History'>
                                 <field name='folio_id' readonly='1' />
                             </page>
-                    </notebook>
+                    </notebook> -->
                       
                 </sheet>
             </form>
