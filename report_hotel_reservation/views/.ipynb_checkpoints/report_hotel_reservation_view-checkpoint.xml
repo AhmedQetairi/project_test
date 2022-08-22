@@ -109,7 +109,6 @@
         parent="hotel.hotel_management_menu"
         sequence="7"
     />
-    
 <!--     <menuitem
         name="States By Reservation"
         action="action_report_hotel_reservation_status_tree_graph_bar12"
