@@ -57,11 +57,16 @@
                             <group colspan="4" col="4">
 <!--                                 <field name="floor_id" string="Floor" /> -->
                                 <field name="room_categ_id" select="1" />
+                                <field name="location" select="1" required="1" />
+                                <field name="city" select="1" required="1" />
+                                <field name="district" select="1" required="1" />
+                            
 <!--                                 <field
                                     name="product_manager"
                                     select="2"
                                     string="Billboard Manager"
                                 />
+                                <field 
                                 <field name="capacity" />
                                 <field name="uom_id" invisible="1" />
                                 <field

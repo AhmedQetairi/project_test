@@ -56,4 +56,58 @@
     </record>
     
     
+     <!-- Form view of hotel service type -->
+    <record id="view_hotel_location_form" model="ir.ui.view">
+        <field name="name">hotel.location.form</field>
+        <field name="model">hotel.location</field>
+        <field name="arch" type="xml">
+            <form string="Billboard Location">
+                <sheet>
+                    <group>
+                        <field name="name" string="Location" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Tree view of hotel service type -->
+    <record id="view_hotel_location_tree" model="ir.ui.view">
+        <field name="name">hotel.location.tree</field>
+        <field name="model">hotel.location</field>
+        <field name="arch" type="xml">
+            <tree string="Billboard Location">
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+    
+    
+     <!-- Form view of hotel service type -->
+    <record id="view_hotel_city_form" model="ir.ui.view">
+        <field name="name">hotel.city.form</field>
+        <field name="model">hotel.city</field>
+        <field name="arch" type="xml">
+            <form string="Billboard City">
+                <sheet>
+                    <group>
+                        <field name="name" string="City" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Tree view of hotel service type -->
+    <record id="view_hotel_city_tree" model="ir.ui.view">
+        <field name="name">hotel.city.tree</field>
+        <field name="model">hotel.city</field>
+        <field name="arch" type="xml">
+            <tree string="Billboard City">
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+    
+    
+    
+    
 </odoo>
