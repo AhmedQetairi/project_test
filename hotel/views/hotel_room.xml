@@ -60,6 +60,17 @@
                                 <field name="location" select="1" required="1" />
                                 <field name="city" select="1" required="1" />
                                 <field name="district" select="1" required="1" />
+                                <field name="BBcode"/>
+                                <field name="shape"/>
+                                <field name="material"/>
+                                <div>
+                                    <label for="bbspace_height" string="BB Space M^2" />
+                                    <field name="bbspace_height"/>*<field name="bbspace_width" />
+                                </div>       
+                                    
+                                
+
+                                
                             
 <!--                                 <field
                                     name="product_manager"
@@ -148,6 +159,15 @@
                 <field name="name" />
                 <field name="room_categ_id" />
                 <field name="status" />
+                <field name="BBcode"/>
+                <field name="shape"/>
+                <field name="material"/>
+                <field name="bbspace_height"/>
+                <field name="bbspace_width" />
+                <field name="image" widget="image" class="oe_avatar"/>
+                
+  
+                     
                 
             </tree>
         </field>
