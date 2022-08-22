@@ -26,6 +26,22 @@ class HotelRoom(models.Model):
     city = fields.Many2one("hotel.city", "City")
     district = fields.Many2one("hotel.district", "District")
     
+    BBcode = fields.Char("BBCODE")
+    shape = fields.Selection(
+        [("horizental", "Horizental"), ("vertical", "Vertical")],
+        "Shape",
+        default="",
+    )
+    
+    material = fields.Selection(
+        [("pvc", "PVC"), ("vinyl", "VINYL")],
+        "Material",
+        default="",
+    )
+    
+    bbspace_height = fields.Integer("BB Space Height")
+    bbspace_width = fields.Integer("BB Space Width")
+    
     product_id = fields.Many2one(
         "product.product",
         "Product_id",
@@ -55,14 +71,36 @@ class HotelRoom(models.Model):
         "Status",
         default="available",
     )
-    capacity = fields.Integer("Capacity", required=True)
+    capacity = fields.Integer("Capacity")
     room_line_ids = fields.One2many(
         "folio.room.line", "room_id", string="Billboard Reservation Line"
     )
     product_manager = fields.Many2one("res.users", "Product Manager")
     
     
+    
+    @api.model
+    def create(self,vals):
+        if 'image' in vals:
+            picture = tools.ImageProcess(vals['image'])
+            # resize uploaded image into 250 X 250
+            resize_image = image.resize(130, 130)    
+            resize_image_b64 = resize_image.image_base64()   
+            vals['image'] = resize_image_b64
+        obj = super(campus_applicant, self).create(vals)
+        return obj
 
+    def write(self,vals):
+        if 'image' in vals:
+            picture = tools.ImageProcess(vals['image'])
+            # resize uploaded image into 250 X 250
+            resize_image = image.resize(250, 250)    
+            resize_image_b64 = resize_image.image_base64()   
+            vals['image'] = resize_image_b64
+        obj = super(campus_applicant, self).write(vals)
+        return obj
+    
+    
     @api.model
     def create(self, vals):
         if "room_categ_id" in vals:
