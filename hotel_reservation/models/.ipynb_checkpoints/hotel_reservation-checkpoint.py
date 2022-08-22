@@ -58,7 +58,6 @@ class HotelReservation(models.Model):
         "product.pricelist",
         "Scheme",
         required=True,
-        readonly=True,
         states={"draft": [("readonly", False)]},
         help="Pricelist for current reservation.",
     )
