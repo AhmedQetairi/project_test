@@ -137,15 +137,29 @@
                 <field name="list_price" string="Room rate" />
                 <field name="status" string="Status" />
                 <newline />
-                <filter
-                    name="available"
-                    string="Available"
-                    domain="[('status','=', 'available')]"
+                
+                 <filter
+                    name="ramallah"
+                    string="Ramallah and AlBirah"
+                    domain="[('district','=', 'Ramallah and AlBirah')]"
                 />
+                
                 <filter
-                    name="reserved"
-                    string="Reserved"
-                    domain="[('status','=', 'occupied')]"
+                    name="nablus"
+                    string="Nablus"
+                    domain="[('district','=', 'Nablus')]"
+                />
+                
+                <filter
+                    name="hebron"
+                    string="Hebron"
+                    domain="[('district','=', 'Hebron')]"
+                />
+                
+                <filter
+                    name="jericho"
+                    string="Jericho"
+                    domain="[('district','=', 'Jericho')]"
                 />
             </search>
         </field>
