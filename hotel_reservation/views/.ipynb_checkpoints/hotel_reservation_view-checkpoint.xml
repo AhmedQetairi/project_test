@@ -84,7 +84,7 @@
                               
                             <field name="company_id" string="Branch"/>
                             
-<!--                             <field name="pricelist_id" col="2" />
+                            <field name="pricelist_id" col="2" />
                             <field
                                 name="partner_order_id"
                                 domain="[('parent_id','=',partner_id)]"
@@ -98,7 +98,7 @@
                                 name="partner_shipping_id"
                                 domain="[('parent_id','=',partner_id)]"
                                 invisible="True"
-                            />  -->
+                            /> 
                         </group>  
                         
                         <group colspan="4" col="4">
