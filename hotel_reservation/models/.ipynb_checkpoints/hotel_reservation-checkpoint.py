@@ -747,8 +747,27 @@ class HotelReservationLine(models.Model):
                                ('categ_id','=',categ_id)]",
     )
     categ_id = fields.Many2one("hotel.room.type", "Room Type")
+    
+    checkin = fields.Datetime(
+        "Start Date",
+        required=True,
+        readonly=True,
+        related = "line_id.checkin",
+    )
+    checkout = fields.Datetime(
+        "End Date",
+        required=True,
+        readonly=True,
+        related = "line_id.checkout",
+        
+    )
+    
+    
+    
+    
+    
 
-    @api.onchange("categ_id")
+    @api.onchange("categ_id","checkin","checkout")
     def on_change_categ(self):
         """
         When you change categ_id it check checkin and checkout are
