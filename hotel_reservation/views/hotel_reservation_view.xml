@@ -8,13 +8,13 @@
         <field name="arch" type="xml">
             <form string="Reservation">
                 <header>
-<!--                     <button
+                    <button
                         name="action_send_reservation_mail"
                         type="object"
                         string="Send Reservation Email"
                         states="confirm"
                         class="oe_highlight"
-                    /> -->
+                    />
                     <button
                         name="confirmed_reservation"
                         string="Confirm"
@@ -22,13 +22,13 @@
                         class="oe_highlight"
                         type="object"
                     />
-<!--                     <button
+                    <button
                         name="create_folio"
                         string="Create Quotation"
                         states="confirm"
                         class="oe_highlight"
                         type="object"
-                    /> -->
+                    />
                     <button
                         name="cancel_reservation"
                         string="Cancel Reservation"

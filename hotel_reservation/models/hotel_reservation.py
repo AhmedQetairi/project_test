@@ -497,11 +497,11 @@ class HotelReservation(models.Model):
                             ):
                                 room_bool = True
                                 
-                            if (
-                                check_out >= reserv_checkin + timedelta(days=3)  
-                                or reserv_checkout <= check_in + timedelta(days=3)
-                            ):
-                                room_bool = False
+#                             if (
+#                                 check_out == reserv_checkin  
+#                                 or reserv_checkout == check_in
+#                             ):
+#                                 room_bool = True
                             
                             r_checkin = (reservation.checkin).date()
                             r_checkout = (reservation.checkout).date()
@@ -812,11 +812,11 @@ class HotelReservationLine(models.Model):
                         assigned = True
                         
                     if (
-                        line.check_in <= self.line_id.checkout <= line.check_in + relativedelta(days=3) 
+                        line.check_in + relativedelta(days=1) < self.line_id.checkout <= line.check_in
                     ) or (
-                        line.check_out - relativedelta(days=3) <= self.line_id.checkin <= line.check_out
+                        line.check_out <= self.line_id.checkin < line.check_out + relativedelta(days=1)
                     ):
-                        assigned = False
+                        assigned = True
                         
             for rm_line in room.room_line_ids.filtered(lambda l: l.status != "cancel"):
                 if self.line_id.checkin and rm_line.check_in and self.line_id.checkout:
@@ -837,12 +837,12 @@ class HotelReservationLine(models.Model):
                     ):
                         assigned = True
                         
-                    if (
-                        rm_line.check_in <= self.line_id.checkout <= rm_line.check_in + relativedelta(days=3) 
-                    ) or (
-                        rm_line.check_out - relativedelta(days=3) <= self.line_id.checkin <= rm_line.check_out
-                    ):
-                        assigned = False 
+#                     if (
+#                         rm_line.check_in == self.line_id.checkout
+#                     ) or (
+#                         rm_line.check_out == self.line_id.checkin
+#                     ):
+#                         assigned = True 
                         
             if not assigned:
                 room_ids.append(room.id)
