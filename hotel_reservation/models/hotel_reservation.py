@@ -761,11 +761,7 @@ class HotelReservationLine(models.Model):
         related = "line_id.checkout",
         
     )
-    
-    
-    
-    
-    
+     
 
     @api.onchange("categ_id","checkin","checkout")
     def on_change_categ(self):
