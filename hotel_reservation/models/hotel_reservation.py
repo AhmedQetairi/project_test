@@ -812,7 +812,7 @@ class HotelReservationLine(models.Model):
                         assigned = True
                         
                     if (
-                        line.check_in + relativedelta(days=1) < self.line_id.checkout <= line.check_in
+                        line.check_in <= self.line_id.checkout < line.check_in + relativedelta(days=1)
                     ) or (
                         line.check_out <= self.line_id.checkin < line.check_out + relativedelta(days=1)
                     ):
@@ -837,12 +837,12 @@ class HotelReservationLine(models.Model):
                     ):
                         assigned = True
                         
-#                     if (
-#                         rm_line.check_in == self.line_id.checkout
-#                     ) or (
-#                         rm_line.check_out == self.line_id.checkin
-#                     ):
-#                         assigned = True 
+                    if (
+                        rm_line.check_in <= self.line_id.checkout < rm_line.check_in + relativedelta(days=1)
+                    ) or (
+                        rm_line.check_out <= self.line_id.checkin < rm_line.check_out + relativedelta(days=1)
+                    ):
+                        assigned = True 
                         
             if not assigned:
                 room_ids.append(room.id)
