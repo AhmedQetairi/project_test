@@ -32,7 +32,7 @@ class HotelReservation(models.Model):
     date_order = fields.Datetime(
         "Date Ordered",
         readonly=True,
-        required=True,
+        
         index=True,
         default=lambda self: fields.Datetime.now(),
     )
@@ -42,22 +42,22 @@ class HotelReservation(models.Model):
         "Branch",
         readonly=True,
         index=True,
-        required=True,
+        
         default=1,
         states={"draft": [("readonly", False)]},
     )
     partner_id = fields.Many2one(
         "res.partner",
         "Customer Name",
-        readonly=True,
+        
         index=True,
-        required=True,
+        
         states={"draft": [("readonly", False)]},
     )
     pricelist_id = fields.Many2one(
         "product.pricelist",
         "Scheme",
-        required=True,
+        
         states={"draft": [("readonly", False)]},
         help="Pricelist for current reservation.",
     )
@@ -151,6 +151,8 @@ class HotelReservation(models.Model):
     
     goal_rooms_test = fields.Many2many("hotel.room")
     
+    room_update_reservation = fields.Many2many("hotel.room.reservation.line","room_id")
+    
     
     @api.onchange("checkin")
     def on_change_checkin(self):
@@ -176,7 +178,7 @@ class HotelReservation(models.Model):
 #             rec.reservation_line = lines
         
         
-    @api.onchange("date_from_test", "date_to_test", "reservation_line")  # noqa C901 (function is too complex)
+    @api.onchange("date_from_test", "date_to_test", "reservation_line", "room_update_reservation")  # noqa C901 (function is too complex)
     def get_room_summary(self):  # noqa C901 (function is too complex)
         """
         @param self: object pointer
@@ -190,6 +192,12 @@ class HotelReservation(models.Model):
         date_range_list = []
         main_header = []
         summary_header_list = ["Billboards"]
+        
+        if self.room_update_reservation:
+            self.date_from_test = self.room_update_reservation.check_in
+        if self.room_update_reservation:
+            self.date_to_test = self.room_update_reservation.check_out
+            
         if self.date_from_test and self.date_to_test:
             if self.date_from_test > self.date_to_test:
                 raise UserError(_("End Date should be greater than Start date."))
@@ -209,15 +217,11 @@ class HotelReservation(models.Model):
             while temp_date <= d_to_obj:
                 val = ""
                 val = (
-                    str(temp_date.strftime("%a"))
-                    + " "
-                    + str(temp_date.strftime("%b"))
-                    + " "
-                    + str(temp_date.strftime("%d"))
+                    str(temp_date.strftime("%b"))     
                 )
                 summary_header_list.append(val)
                 date_range_list.append(temp_date.strftime(dt))
-                temp_date = temp_date + timedelta(days=1)
+                temp_date = temp_date + timedelta(days=30)
             all_detail.append(summary_header_list)
             room_ids = room_obj.search([])
             all_room_detail = []
@@ -354,20 +358,20 @@ class HotelReservation(models.Model):
     
         
 
-#     def unlink(self):
-#         """
-#         Overrides orm unlink method.
-#         @param self: The object pointer
-#         @return: True/False.
-#         """
-#         lines_of_moves_to_post = self.filtered(
-#             lambda reserv_rec: reserv_rec.state != "draft"
-#         )
-#         if lines_of_moves_to_post:
-#             raise ValidationError(
-#                 _("Sorry, you can only delete the reservation when it's draft!")
-#             )
-#         return super(HotelReservation, self).unlink()
+    def unlink(self):
+        """
+        Overrides orm unlink method.
+        @param self: The object pointer
+        @return: True/False.
+        """
+        lines_of_moves_to_post = self.filtered(
+            lambda reserv_rec: reserv_rec.state != "draft"
+        )
+        if lines_of_moves_to_post:
+            raise ValidationError(
+                _("Sorry, you can only delete the reservation when it's draft!")
+            )
+        return super(HotelReservation, self).unlink()
 
     def copy(self):
         ctx = dict(self._context) or {}
@@ -761,11 +765,7 @@ class HotelReservationLine(models.Model):
         related = "line_id.checkout",
         
     )
-    
-    
-    
-    
-    
+     
 
     @api.onchange("categ_id","checkin","checkout")
     def on_change_categ(self):
