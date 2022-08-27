@@ -9,9 +9,13 @@ class QuickRoomReservation(models.TransientModel):
     _description = "Quick Room Reservation"
     
     
-    
-    reservation_id = fields.Many2one("hotel.reservation", "Reservation")
-    reservation_no = fields.Char("Reservation No" , related="reservation_id.reservation_no")
+         
+   
+            
+            
+            
+    reservation_id = fields.Many2one("hotel.reservation", "Reservation NO.", required = True)
+    reservation_no = fields.Char("Reservation No")
     
     date_order = fields.Datetime(
         "Date Ordered",
@@ -21,7 +25,7 @@ class QuickRoomReservation(models.TransientModel):
         default=lambda self: fields.Datetime.now(),
     )
     
-    room_id = fields.Many2one("hotel.room", "Room", required=True)
+    room_id = fields.Many2one("hotel.room", "Billboard", required=True)
 
     checkin = fields.Datetime(
         "Start Date",
@@ -60,6 +64,37 @@ class QuickRoomReservation(models.TransientModel):
         readonly=True,
         default="draft",
     )
+    
+    
+    @api.model
+    def default_get(self, fields):
+        """
+        To get default values for the object.
+        @param self: The object pointer.
+        @param fields: List of fields for which we want default values
+        @return: A dictionary which of fields with values.
+        """
+        res = super(QuickRoomReservation, self).default_get(fields)
+        keys = self._context.keys()
+        
+        hotel_res_line_obj_reservation = self.env["hotel.reservation"]
+            
+#         res.update({"reservation_no": hotel_res_line_obj_reservation.reservation_no})
+
+
+#         res["reservation_id"] = hotel_res_line_obj_reservation.reservation_id.id
+    
+        
+        if "date" in keys:
+            res.update({"checkin": self._context["date"]})      
+            
+        if "room_id" in keys:
+            roomid = self._context["room_id"]
+            res.update({"room_id": int(roomid)})
+            
+        
+        return res
+    
 #     folio_id = fields.Many2many(
 #         "hotel.folio",
 #         "hotel_folio_reservation_rel",
@@ -150,54 +185,42 @@ class QuickRoomReservation(models.TransientModel):
             )
             
         
-        
-        
-    @api.model
-    def default_get(self, fields):
-        """
-        To get default values for the object.
-        @param self: The object pointer.
-        @param fields: List of fields for which we want default values
-        @return: A dictionary which of fields with values.
-        """
-        res = super(QuickRoomReservation, self).default_get(fields)
-        keys = self._context.keys()
-         
-        if "date" in keys:
-            res.update({"checkin": self._context["date"]})      
-            
-        if "room_id" in keys:
-            roomid = self._context["room_id"]
-            res.update({"room_id": int(roomid)})
             
         return res
     
     
-    def cancel_reservation(self):
+    def update_reservation(self):
         """
         This method cancel record set for hotel room reservation line
         ------------------------------------------------------------------
         @param self: The object pointer
         @return: cancel record set for hotel room reservation line.
         """
+        vals = {}
         room_res_line_obj = self.env["hotel.room.reservation.line"]
         hotel_res_line_obj = self.env["hotel.reservation.line"]
         
         hotel_res_line_obj_reservation = self.env["hotel.reservation"]
         hotel_res_line_obj_reservation.state = "cancel"
         
+        
+        
         room_reservation_line = room_res_line_obj.search(
             [("reservation_id", "=", self.reservation_id.id),('room_id', '=', self.room_id.id)]
         )
         
+       
+        
         room_reservation_line.write({"check_in": self.checkin,
                                      "check_out": self.checkout,
                                     })
-#         room_reservation_line.unlink()
         
-        reservation_lines = hotel_res_line_obj.search([("line_id", "in", self.ids)])
-        for reservation_line in reservation_lines:
-            reservation_line.reserve.write({"isroom": True, "status": "available"})
+#         reservation_lines = hotel_res_line_obj_reservation.search( [("reservation_id", "=", self.reservation_id.id),('room_id', '=', self.room_id.id)])
+        
+        
+#         hotel_res_line_obj_reservation.update(vals)
+# #         room_reservation_line.unlink()
+        
         return True
     
 

@@ -29,6 +29,9 @@ class HotelReservation(models.Model):
             res.update({"no_of_folio": len(res.folio_id.ids)})
 
     reservation_no = fields.Char("Reservation No", readonly=True, copy=False)
+    reservation_id = fields.Many2one("hotel.reservation", "Reservation")
+
+    
     date_order = fields.Datetime(
         "Date Ordered",
         readonly=True,
@@ -151,7 +154,19 @@ class HotelReservation(models.Model):
     
     goal_rooms_test = fields.Many2many("hotel.room")
     
-    room_update_reservation = fields.Many2many("hotel.room.reservation.line","room_id")
+    qweb_shape = fields.Selection(
+        [
+            ("days", "IN DAYS"),
+            ("months", "IN MONTHS"),
+        ],
+        "Billboard Schedule",
+        default="months",
+        required = True,
+        readonly=True,
+        states={"draft": [("readonly", False)]},
+    )
+    
+    
     
     
     @api.onchange("checkin")
@@ -178,7 +193,7 @@ class HotelReservation(models.Model):
 #             rec.reservation_line = lines
         
         
-    @api.onchange("date_from_test", "date_to_test", "reservation_line", "room_update_reservation")  # noqa C901 (function is too complex)
+    @api.onchange("date_from_test", "date_to_test", "reservation_line","qweb_shape")  # noqa C901 (function is too complex)
     def get_room_summary(self):  # noqa C901 (function is too complex)
         """
         @param self: object pointer
@@ -193,10 +208,6 @@ class HotelReservation(models.Model):
         main_header = []
         summary_header_list = ["Billboards"]
         
-        if self.room_update_reservation:
-            self.date_from_test = self.room_update_reservation.check_in
-        if self.room_update_reservation:
-            self.date_to_test = self.room_update_reservation.check_out
             
         if self.date_from_test and self.date_to_test:
             if self.date_from_test > self.date_to_test:
@@ -214,14 +225,29 @@ class HotelReservation(models.Model):
                 (self.date_to_test).replace(tzinfo=pytz.timezone("UTC")).astimezone(timezone)
             )
             temp_date = d_frm_obj
-            while temp_date <= d_to_obj:
-                val = ""
-                val = (
-                    str(temp_date.strftime("%b"))     
-                )
-                summary_header_list.append(val)
-                date_range_list.append(temp_date.strftime(dt))
-                temp_date = temp_date + timedelta(days=30)
+            if self.qweb_shape == "months":
+                while temp_date <= d_to_obj:
+                    val = ""
+                    val = (
+                        str(temp_date.strftime("%b"))     
+                    )
+                    summary_header_list.append(val)
+                    date_range_list.append(temp_date.strftime(dt))
+                    temp_date = temp_date + timedelta(days=30) 
+                    
+            elif self.qweb_shape == "days":
+                while temp_date <= d_to_obj:
+                    val = ""
+                    val = (str(temp_date.strftime("%a"))
+                    + " "
+                    + str(temp_date.strftime("%b"))
+                    + " "
+                    + str(temp_date.strftime("%d"))     
+                    )
+                    summary_header_list.append(val)
+                    date_range_list.append(temp_date.strftime(dt))
+                    temp_date = temp_date + timedelta(days=1)
+                    
             all_detail.append(summary_header_list)
             room_ids = room_obj.search([])
             all_room_detail = []
