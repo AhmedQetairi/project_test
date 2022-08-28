@@ -47,7 +47,7 @@
                         string="Set to Done"
                         states="sale"
                         class="oe_highlight"
-                        help="If a Hotel Folio is done, you cannot modify it manually anymore. However, you will still be able to invoice or deliver. This is used to freeze the Hotel Folio."
+                        help="If a Billboard Quotation is done, you cannot modify it manually anymore. However, you will still be able to invoice or deliver. This is used to freeze the Hotel Folio."
                     />
                     <field
                         name="state"
@@ -72,11 +72,11 @@
                         />
                     </group>
                     <notebook>
-                        <page name="folio" string="Folio">
+                        <page name="folio" string="Quotation">
                             <group colspan="4" col="4">
                                 <field
                                     name="partner_id"
-                                    string="Guest Name"
+                                    string="Customer Name"
                                     required="1"
                                 />
                                 <field
@@ -104,12 +104,12 @@
                             <field
                                 name="room_line_ids"
                                 colspan="4"
-                                string="Room Line"
+                                string="Billboard Line"
                                 nolabel="1"
                                 context="{'default_checkin_date':checkin_date,
                                         'default_checkout_date':checkout_date}"
                             >
-                                <tree editable="bottom" string="Room Line">
+                                <tree editable="bottom" string="Billboard Line">
                                     <field
                                         name="company_id"
                                         options="{'no_create': True}"

@@ -17,7 +17,7 @@ class FolioRoomLine(models.Model):
     room_id = fields.Many2one("hotel.room", "Billboard id", ondelete="restrict", index=True)
     check_in = fields.Datetime("Start Date", required=True)
     check_out = fields.Datetime("End Date", required=True)
-    folio_id = fields.Many2one("hotel.folio", "Folio Number", ondelete="cascade")
+    folio_id = fields.Many2one("hotel.folio", "Quotation Number", ondelete="cascade")
     status = fields.Selection(related="folio_id.state", string="state")
 
 
@@ -58,7 +58,7 @@ class HotelFolio(models.Model):
         )
         return fields.Datetime.to_string(checkout_date)
 
-    name = fields.Char("Folio Number", readonly=True, index=True, default="New")
+    name = fields.Char("Quotation Number", readonly=True, index=True, default="New")
     order_id = fields.Many2one(
         "sale.order", "Order", delegate=True, required=True, ondelete="cascade"
     )
@@ -94,11 +94,11 @@ class HotelFolio(models.Model):
     )
     hotel_policy = fields.Selection(
         [
-            ("prepaid", "On Booking"),
-            ("manual", "On Check In"),
-            ("picking", "On Checkout"),
+            ("prepaid", "On Reservation"),
+            ("manual", "On Start Date"),
+            ("picking", "On End Date"),
         ],
-        "Hotel Policy",
+        "Billboard Policy",
         default="manual",
         help="Hotel policy for payment that "
         "either the guest has to payment at "
@@ -138,8 +138,8 @@ class HotelFolio(models.Model):
                     if record:
                         raise ValidationError(
                             _(
-                                """Room Duplicate Exceeded!, """
-                                """You Cannot Take Same %s Room Twice!"""
+                                """Billboard Duplicate Exceeded!, """
+                                """You Cannot Take Same %s Billboard Twice!"""
                             )
                             % (product.name)
                         )
@@ -310,7 +310,7 @@ class HotelFolioLine(models.Model):
         delegate=True,
         ondelete="cascade",
     )
-    folio_id = fields.Many2one("hotel.folio", "Folio", ondelete="cascade")
+    folio_id = fields.Many2one("hotel.folio", "Quotation", ondelete="cascade")
     checkin_date = fields.Datetime("Start Date", required=True)
     checkout_date = fields.Datetime("End Date", required=True)
     is_reserved = fields.Boolean(
@@ -341,15 +341,15 @@ class HotelFolioLine(models.Model):
         if self.checkin_date >= self.checkout_date:
             raise ValidationError(
                 _(
-                    """Room line Check In Date Should be """
-                    """less than the Check Out Date!"""
+                    """Billboard line Start Date Should be """
+                    """less than the End Date!"""
                 )
             )
         if self.folio_id.date_order and self.checkin_date:
             if self.checkin_date.date() < self.folio_id.date_order.date():
                 raise ValidationError(
                     _(
-                        """Room line check in date should be """
+                        """Billboard line Start date should be """
                         """greater than the current date."""
                     )
                 )
@@ -826,7 +826,7 @@ class HotelServiceLine(models.Model):
         if not self.ser_checkout_date:
             self.ser_checkout_date = time_a
         if self.ser_checkout_date < self.ser_checkin_date:
-            raise ValidationError(_("Checkout must be greater or equal checkin date"))
+            raise ValidationError(_("END DATE must be greater than or equal START DATE"))
         if self.ser_checkin_date and self.ser_checkout_date:
             diffDate = self.ser_checkout_date - self.ser_checkin_date
             qty = diffDate.days + 1
