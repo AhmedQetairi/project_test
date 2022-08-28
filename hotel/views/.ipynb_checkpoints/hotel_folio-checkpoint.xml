@@ -6,6 +6,14 @@
         <field name="arch" type="xml">
             <form string="Hotel Folio">
                 <header>
+                    
+                    <button
+                        name="action_quotation_send"
+                        type="object"
+                        states="draft"
+                        string="Send by Email"
+                        class="oe_highlight"
+                    />
                     <button
                         name="action_confirm"
                         states="draft"
@@ -20,13 +28,13 @@
                         class="btn-primary"
                         attrs="{'invisible': ['|',('state', 'in', ('draft','cancel','done')), ('invoice_status', 'in', 'invoiced')]}"
                     />
-                    <button
+<!--                     <button
                         name="action_cancel_draft"
                         states="cancel"
                         string="Set to Draft"
                         type="object"
                         class="oe_highlight"
-                    />
+                    /> -->
                     <button
                         name="action_cancel"
                         string="Cancel"

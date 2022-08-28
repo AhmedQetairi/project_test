@@ -101,7 +101,7 @@
         sequence="4"
     />
     <menuitem
-        name="Create Quotation"
+        name="Quotations"
         id="menu_open_hotel_folio1_form_tree_all"
         action="open_hotel_folio1_form_tree_all"
         sequence="5"
