@@ -131,6 +131,7 @@ class HotelReservation(models.Model):
     state = fields.Selection(
         [
             ("draft", "Draft"),
+            ("quotation", "Quotation"),
             ("confirm", "Confirm"),
             ("cancel", "Cancel"),
             ("done", "Done"),
@@ -384,20 +385,20 @@ class HotelReservation(models.Model):
     
         
 
-    def unlink(self):
-        """
-        Overrides orm unlink method.
-        @param self: The object pointer
-        @return: True/False.
-        """
-        lines_of_moves_to_post = self.filtered(
-            lambda reserv_rec: reserv_rec.state != "draft"
-        )
-        if lines_of_moves_to_post:
-            raise ValidationError(
-                _("Sorry, you can only delete the reservation when it's draft!")
-            )
-        return super(HotelReservation, self).unlink()
+#     def unlink(self):
+#         """
+#         Overrides orm unlink method.
+#         @param self: The object pointer
+#         @return: True/False.
+#         """
+#         lines_of_moves_to_post = self.filtered(
+#             lambda reserv_rec: reserv_rec.state != "draft"
+#         )
+#         if lines_of_moves_to_post:
+#             raise ValidationError(
+#                 _("Sorry, you can only delete the reservation when it's draft!")
+#             )
+#         return super(HotelReservation, self).unlink()
 
     def copy(self):
         ctx = dict(self._context) or {}
@@ -719,7 +720,7 @@ class HotelReservation(models.Model):
             folio = hotel_folio_obj.create(folio_vals)
             for rm_line in folio.room_line_ids:
                 rm_line._onchange_product_id()
-            self.write({"folio_id": [(6, 0, folio.ids)], "state": "done"})
+            self.write({"folio_id": [(6, 0, folio.ids)], "state": "quotation"})
         return True
 
     def _onchange_check_dates(
